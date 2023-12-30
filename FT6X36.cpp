@@ -39,12 +39,12 @@ bool FT6X36::begin(uint8_t threshold)
 	return true;
 }
 
-void FT6X36::registerIsrHandler(void (*fn)())
+void FT6X36::registerIsrHandler(std::function<void()> fn)
 {
 	_isrHandler = fn;
 }
 
-void FT6X36::registerTouchHandler(void (*fn)(TPoint point, TEvent e))
+void FT6X36::registerTouchHandler(std::function<void(TPoint point, TEvent e)> fn)
 {
 	_touchHandler = fn;
 }

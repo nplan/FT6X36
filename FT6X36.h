@@ -2,6 +2,7 @@
 #define FT6X36_h
 #include <Arduino.h>
 #include <Wire.h>
+#include <functional>
 
 #ifdef ESP32
 #define ISR_ATTR IRAM_ATTR
@@ -101,8 +102,8 @@ public:
 	FT6X36(TwoWire * wire, int8_t intPin);
 	~FT6X36();
 	bool begin(uint8_t threshold = FT6X36_DEFAULT_THRESHOLD);
-	void registerIsrHandler(void(*fn)());
-	void registerTouchHandler(void(*fn)(TPoint point, TEvent e));
+	void registerIsrHandler(std::function<void()> fn);
+	void registerTouchHandler(std::function<void(TPoint point, TEvent e)> fn);
 	uint8_t touched();
 	void loop();
 	void processTouch();
@@ -120,8 +121,8 @@ private:
 	TwoWire * _wire = nullptr;
 	uint8_t _intPin;
 
-	void(*_isrHandler)() = nullptr;
-	void(*_touchHandler)(TPoint point, TEvent e) = nullptr;
+	std::function<void()> _isrHandler = nullptr;
+	std::function<void(TPoint point, TEvent e)> _touchHandler = nullptr;
 	volatile uint8_t _isrCounter = 0;
 	
 	uint8_t _touches;
